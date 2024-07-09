@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+
+:root {
+  --main-color: rgb(100, 115, 230);
+  --color-light: rgb(145, 150, 255);
+  --color-super-light: rgb(245, 245, 255);
+  --color-low-opacity: rgba(145, 155, 235, 0.75);
+  --color-super-low-opacity: rgba(200, 200, 230, 0.75);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+input:not([type="checkbox"]),
+textarea {
+  resize: none;
+  font: inherit;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  outline-offset: -1px;
+  outline: 1px solid rgb(225, 225, 225);
+  width: 100%;
+  transition: all 0.25s ease-in-out;
+
+  &:focus {
+    outline-offset: -1.5px;
+    outline: 3px solid rgba(0, 125, 250, 0.5);
+  }
+}
+
+input[type="checkbox"] {
+  position: relative;
+  appearance: none;
+  display: block;
+  outline: none;
+  width: 3rem;
+  height: 1.5rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.25s;
+  background-color: rgba($color: black, $alpha: 0.05);
+  box-shadow: inset 0 0 5px rgba($color: black, $alpha: 0.025);
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    background-color: white;
+    transform: scale(1.1);
+    transition: left 0.25s;
+    box-shadow: 0 0 1rem rgba($color: black, $alpha: 0.1);
+  }
+
+  &:checked {
+    background-color: var(--main-color);
+
+    &::after {
+      left: 1.5rem;
+    }
+  }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn {
+  @mixin buttons {
+    color: var(--main-color);
+    border: 1px solid var(--main-color);
+    box-shadow: 3px 3px var(--color-low-opacity);
+    transition: all 0.25s ease-in-out;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.5rem;
+  }
+
+  @include buttons;
+  background-color: transparent;
+
+  &:hover,
+  &:active {
+    box-shadow: 0 0 0.5rem var(--color-super-low-opacity);
+    background-color: var(--color-super-light);
+  }
+
+  &-flat {
+    @include buttons;
+    color: white;
+    background-color: var(--main-color);
+
+    &[disabled] {
+      background-color: rgba($color: black, $alpha: 0.05);
+      color: rgba($color: black, $alpha: 0.5);
+      border: none;
+      box-shadow: none;
+      pointer-events: none;
+      cursor: auto;
+    }
+
+    &:hover,
+    &:active {
+      box-shadow: 0 0 0.5rem var(--color-low-opacity);
+      background-color: var(--color-light);
+      border-color: var(--color-light);
+    }
+  }
+}

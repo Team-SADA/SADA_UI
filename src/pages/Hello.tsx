@@ -1,0 +1,63 @@
+import { useState } from "react";
+import classes from "./hello.module.scss";
+import { useNavigate } from "react-router-dom";
+
+const Hello = () => {
+  const [agree, setAgree] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  const checkboxClickHandler = (_: any) => {
+    setAgree(false);
+    setTimeout(() => {
+      setAgree(true);
+    }, 1000);
+  };
+
+  const nextPageHandler = (_: any) => {
+    navigate("/email");
+  };
+
+  return (
+    <div className={classes.index}>
+      <header></header>
+      <main>
+        <section>
+          <img src="logo.png" alt="" />
+          <h1>SADA Interface</h1>
+          <span className={classes.yakgwan}>[약관]</span>
+          <span>
+            <div>
+              1. 해당 전화번호는 <em>광고성 목적</em>으로 이용되며, 설문 작성일
+              이후로부터 1일 이내에 전화가 올 수 있습니다.
+            </div>
+            <div>
+              2. 설문에서 입력받은 모든 개인정보는 <em>추첨 이외의 목적</em>으로
+              사용되며, 상업적 목적으로 <em>이용</em>될 수 있습니다.{" "}
+            </div>
+            <div>
+              3. 1주일이 지나도 개인정보는 <em>파기되지 않습니다.</em>
+            </div>
+          </span>
+          <div className={classes.control}>
+            <span>개인정보 수집에 동의합니까?</span>
+            <input
+              checked={agree}
+              type="checkbox"
+              onClick={checkboxClickHandler}
+            />
+          </div>
+          <button className="btn-flat">
+            <span>다음 페이지로 넘어가지 않기</span>
+          </button>
+          <span>
+            <span onClick={nextPageHandler}>여기를</span>{" "}
+            <span className={classes.underbar}>눌러</span> 다음 페이지로
+            <span className={classes.red}> 넘어가세요</span>
+          </span>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default Hello;
