@@ -13,7 +13,7 @@ const FirstPage = () => {
     setAgree(false);
     setTimeout(() => {
       setAgree(true);
-    }, 1000);
+    }, 500);
   };
 
   const nextPageHandler = (_: any) => {
