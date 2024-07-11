@@ -13,6 +13,27 @@
   font-family: "Inter", sans-serif;
 }
 
+.time {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  transition: all 1.5s ease-in-out;
+}
+
+.center {
+  font-size: 2rem;
+  transform: translateX(50%);
+  top: 4rem;
+  right: 50%;
+}
+
+main {
+  margin: 2rem auto;
+  padding: 0 1rem;
+  min-height: calc(100vh - 8rem);
+  width: min(100%, 45rem);
+}
+
 body {
   margin: 0;
 }

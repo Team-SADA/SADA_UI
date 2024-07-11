@@ -1,6 +1,27 @@
-.main {
-  margin: 2rem auto;
-  padding: 0 1rem;
-  min-height: calc(100vh - 8rem);
-  width: min(100%, 45rem);
+section {
+  position: relative;
+
+  .nameTable {
+  }
+
+  .line {
+  }
+
+  .basket {
+    position: absolute;
+
+    button {
+      position: absolute;
+
+      .button1 {
+        left: 0;
+        top: 10px;
+        z-index: 10;
+      }
+
+      .button2 {
+        right: 0;
+      }
+    }
+  }
 }

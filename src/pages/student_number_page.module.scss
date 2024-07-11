@@ -1,0 +1,52 @@
+.main {
+  margin: 2rem auto;
+  padding: 0 1rem;
+  min-height: calc(100vh - 8rem);
+  width: min(100%, 45rem);
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    img {
+      width: 2rem;
+    }
+  }
+
+  .slot {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      span {
+        font-size: 4rem;
+        font-weight: bold;
+      }
+      button {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .restart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .control {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: right;
+  }
+}
