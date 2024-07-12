@@ -2,26 +2,44 @@ section {
   position: relative;
 
   .nameTable {
+    span {
+
+    }
   }
 
   .line {
+    position: fixed;
   }
 
   .basket {
-    position: absolute;
+    position: fixed;
+    width: 120px;
+    height: 90px;
+    bottom: 80px;
+
+    img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
 
     button {
       position: absolute;
+      width: 80%;
+      height: 20%;
+      left: 50%;
+      opacity: 70%;
+    }
 
-      .button1 {
-        left: 0;
-        top: 10px;
-        z-index: 10;
-      }
+    .button1 {
+      top: 35%;
+      transform: translate(-50%, 50%);
+    }
 
-      .button2 {
-        right: 0;
-      }
+    .button2 {
+      bottom: 30%;
+      transform: translate(-50%, 100%);
+      color: red;
     }
   }
 }
