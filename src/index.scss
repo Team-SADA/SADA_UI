@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
 :root {
   --main-color: rgb(100, 115, 230);
@@ -10,28 +11,7 @@
 
 * {
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
-}
-
-.time {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  transition: all 1.5s ease-in-out;
-}
-
-.center {
-  font-size: 2rem;
-  transform: translateX(50%);
-  top: 4rem;
-  right: 50%;
-}
-
-main {
-  margin: 2rem auto;
-  padding: 0 1rem;
-  min-height: calc(100vh - 8rem);
-  width: min(100%, 45rem);
+  font-family: "Inter", "Noto Sans KR", sans-serif;
 }
 
 body {
@@ -79,7 +59,7 @@ input[type="checkbox"] {
     background-color: white;
     transform: scale(1.1);
     transition: left 0.25s;
-    box-shadow: 0 0 1rem rgba($color: black, $alpha: 0.1);
+    box-shadow: 0 0.05rem 0.2rem rgba($color: black, $alpha: 0.5);
   }
 
   &:checked {

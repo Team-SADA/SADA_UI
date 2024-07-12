@@ -1,11 +1,11 @@
 .index {
   background-color: var(--main-color);
-  padding: 4rem;
+  padding: 5%;
 
   main {
-    margin: 2rem auto;
+    margin: 0vh auto;
     padding: 0 1rem;
-    min-height: calc(100vh - 8rem);
+    min-height: calc(120vh);
     width: min(100%, 45rem);
   }
 
@@ -28,18 +28,25 @@
     }
 
     .yakgwan {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
+      font-weight: bold
     }
 
     em {
-      text-decoration: line-through;
+      // text-decoration: line-through;
+      font-weight: bold;
     }
 
     button {
       background-color: var(--color-light);
     }
 
-    .underbar {
+    .fakeclick {
+      font-weight: bold;
+    }
+    
+    .fakeclick:hover {
+      cursor: pointer;
       text-decoration: underline;
     }
 
