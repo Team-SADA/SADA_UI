@@ -1,10 +1,13 @@
-import { useState } from "react";
-import classes from "./hello.module.scss";
+import { useContext, useState } from "react";
+import classes from "./first_page.module.scss";
 import { useNavigate } from "react-router-dom";
+import GlobalContext from "../components/context/context";
 
-const Hello = () => {
+const FirstPage = () => {
   const [agree, setAgree] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  const { activateTime } = useContext(GlobalContext);
 
   const checkboxClickHandler = (_: any) => {
     setAgree(false);
@@ -14,7 +17,8 @@ const Hello = () => {
   };
 
   const nextPageHandler = (_: any) => {
-    navigate("/email");
+    activateTime();
+    navigate("/student-number");
   };
 
   return (
@@ -44,6 +48,7 @@ const Hello = () => {
               checked={agree}
               type="checkbox"
               onClick={checkboxClickHandler}
+              onChange={() => {}}
             />
           </div>
           <button className="btn-flat">
@@ -60,4 +65,4 @@ const Hello = () => {
   );
 };
 
-export default Hello;
+export default FirstPage;
