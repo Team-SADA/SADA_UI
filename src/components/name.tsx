@@ -1,4 +1,5 @@
 import classes from "./name.module.scss";
+import {useEffect, useRef, useState} from "react";
 
 
 const nameChars = [
@@ -13,30 +14,73 @@ const nameChars = [
     "헌혁현형혜호홍환황효후훈휘흔희",
 ].join("").split("");  // 135 = 15 * 9 characters + 1
 
+function shuffle(array: any[]) {
+    let currentIndex = array.length;
+    while (currentIndex !== 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+interface Block {
+    char: string;
+    left: number;
+}
 
 
 export default function Name() {
+    const [mouseX, setMouseX] = useState(0);
+    const charQueue = shuffle(nameChars);
+    const [newCharIndex, setNewCharIndex] = useState(10);
+
+    const createNewBlock = (): Block => {
+        if (newCharIndex >= charQueue.length)
+            return {char: "", left: 0};
+        const data = charQueue[newCharIndex];
+        setNewCharIndex(newCharIndex + 1);
+        return {char: data, left: Math.random() * window.innerWidth};
+    };
+
+    const [blockList, setBlockList] = useState<Block[]>(
+        charQueue.slice(0, 10).map(char => {return {char: char, left: Math.random() * window.innerWidth}})
+    );
+
+    useEffect(() => {
+        document.addEventListener('mousemove', event => setMouseX(event.clientX));
+    }, []);
+
+    useEffect(() => {
+        setTimeout(() => {
+            const newBlock = createNewBlock();
+            if (newBlock.char !== "")
+                setBlockList([...blockList.slice(1, blockList.length), newBlock]);
+        }, 100);
+    }, [blockList]);
+
     return (
         <section>
-            <h2>여러분의 이름에 포함된 글자를 바구니에 담아보아요</h2>
+            <h2>이름을 입력하세요</h2><input type="text" value={"123"}/>
             <div className={classes.description}>
-                같은 글자는 두 번 다시 나타나지 않아요. 글자를 놓쳤다면 처음부터!!!
+                바구니에 글자를 담아보아요.
+                글자 순서는 상관없어요.
+                같은 글자는 두 번 다시 나타나지 않아요.
+                글자를 놓쳤다면... 안타까운 거죠
             </div>
             <div className={classes.nameTable}>
-                {nameChars.map(char => (
-                    <span className={classes.line}>
-                        <button type="button" onMouseEnter={() => {}} key={char}>
-                            {char}
-                        </button>
+                {blockList.map(block => (
+                    <span className={classes.line} style={{left: block.left}}>
+                        {block.char}
                     </span>
                 ))}
             </div>
-            <div className={classes.basket}>
-                <img src={"./basket.png"} alt="basket" width={120} height={90}/>
-                <button type="button" className="button1" onClick={() => {}}>
+            <div className={classes.basket} style={{left: mouseX - 60}}>
+                <img src={"./basket.png"} alt="basket"/>
+                <button type="button" className={classes.button1} onClick={() => {}}>
                     입력
                 </button>
-                <button type="button" className="button2" onClick={() => {}}>
+                <button type="button" className={classes.button2} onClick={() => {}}>
                     버리기
                 </button>
             </div>
