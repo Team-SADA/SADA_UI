@@ -2,6 +2,8 @@ import { useNavigate } from "react-router";
 import classes from "./name_page.module.scss";
 import {useEffect, useState} from "react";
 
+const DEBUG = true;
+
 const nameChars = [
   "가감갑강건겸경고공곽관교구국권",
   "규균금기김나난남노다도동라랑로",
@@ -14,7 +16,6 @@ const nameChars = [
   "헌혁현형혜호홍환황효후훈휘흔희",
 ].join("").split(""); // 135 = 15 * 9 characters + 1
 
-
 function shuffle(array: any[]) {
     let currentIndex = array.length;
     while (currentIndex !== 0) {
@@ -22,6 +23,7 @@ function shuffle(array: any[]) {
         currentIndex--;
         [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
     }
+    if (DEBUG) console.log(array.join(""));
     return array;
 }
 
@@ -32,49 +34,62 @@ interface Block {
 
 
 
-export default function Name() {
+export default function NamePage() {
     const navigate = useNavigate();
 
     const submitHandler = () => {
+        // Needs additional conditions
         navigate("/birthday");
     };
 
-    const [mouseX, setMouseX] = useState(0);
-    const charQueue = shuffle(nameChars);
-    const [newCharIndex, setNewCharIndex] = useState(10);
+    const [mouseX, setMouseX] = useState(window.innerWidth / 2);
+    const [charQueue, setCharQueue] = useState<string[]>(nameChars);
+    const [newCharIndex, setNewCharIndex] = useState(0);
+
+    const randomLeft = () => Math.random() * window.innerWidth * 0.6;
 
     const createNewBlock = (): Block => {
         if (newCharIndex >= charQueue.length)
             return {char: "", left: 0};
         const data = charQueue[newCharIndex];
         setNewCharIndex(newCharIndex + 1);
-        return {char: data, left: Math.random() * window.innerWidth};
+        return {char: data, left: randomLeft()};
     };
 
-    const [blockList, setBlockList] = useState<Block[]>(
-        charQueue.slice(0, 10).map(char => {return {char: char, left: Math.random() * window.innerWidth}})
-    );
+    const [blockList, setBlockList] = useState<Block[]>([]);
 
     useEffect(() => {
-        document.addEventListener('mousemove', event => setMouseX(event.clientX));
+        let ignore = false;
+        if (!ignore) {
+            if (DEBUG) console.log('load')
+            setCharQueue(shuffle(nameChars));
+            document.addEventListener('mousemove', event => setMouseX(event.clientX));
+        }
+        return () => {ignore = true;}
     }, []);
 
     useEffect(() => {
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             const newBlock = createNewBlock();
-            if (newBlock.char !== "")
-                setBlockList([...blockList.slice(1, blockList.length), newBlock]);
-        }, 100);
-    }, [blockList]);
+            if (DEBUG) console.log(newCharIndex, charQueue, newBlock)
+            if (newBlock.char !== "") setBlockList([...blockList, newBlock]);
+        }, 300);
+    }, [charQueue, newCharIndex]);
 
     return (
         <section>
-            <h2>이름을 입력하세요</h2><input type="text" value={"123"}/>
-            <div className={classes.description}>
-                바구니에 글자를 담아보아요.
-                글자 순서는 상관없어요.
-                같은 글자는 두 번 다시 나타나지 않아요.
-                글자를 놓쳤다면... 안타까운 거죠
+            <div className={classes.header}>
+                <h2>이름을 입력하세요</h2>
+                <input type="text" value={"123"} readOnly={true}/>
+                <div className={classes.description}>
+                    바구니에 글자를 담아보아요.
+                    글자 순서는 상관없어요.
+                    같은 글자는 두 번 다시 나타나지 않아요.
+                    글자를 놓쳤다면... 안타까운 거죠
+                </div>
+                <button className="btn-flat" onClick={submitHandler}>
+                    넘어가기
+                </button>
             </div>
             <div className={classes.nameTable}>
                 {blockList.map(block => (
@@ -94,9 +109,6 @@ export default function Name() {
                     버리기
                 </button>
             </div>
-            <button className="btn-flat" onClick={submitHandler}>
-                넘어가기
-            </button>
         </section>
     )
 }

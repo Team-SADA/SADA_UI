@@ -1,9 +1,21 @@
 section {
   position: relative;
+  padding: 0 20%;
+  user-select: none;
+
+  .header {
+    h2 {}
+    input {}
+    .description {}
+  }
 
   .nameTable {
+    position: relative;
+    width: 100%;
     span {
-
+      position: absolute;
+      animation: fall 1s ease-in forwards;
+      font-size: 30px;
     }
   }
 
@@ -41,5 +53,27 @@ section {
       transform: translate(-50%, 100%);
       color: red;
     }
+  }
+}
+
+@keyframes fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateY(400px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(400px);
   }
 }
