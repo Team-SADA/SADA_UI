@@ -9,9 +9,12 @@ const DormRoomPage = () => {
 
   return (
     <main>
-      기숙사 호실
+      <h1>
+        <img src="logo.png" alt="" />
+        기숙사 호실
+      </h1>
       <button className="btn-flat" onClick={onSubmit}>
-        asdfjaskdlfjaskfasjdfklasd
+        넘어가기
       </button>
     </main>
   );

@@ -9,7 +9,10 @@ const BirthdayPage = () => {
 
   return (
     <main>
-      생일
+      <h1>
+        <img src="logo.png" alt="" />
+        생일
+      </h1>
       <button className="btn-flat" onClick={onSubmit}>
         넘어가기
       </button>

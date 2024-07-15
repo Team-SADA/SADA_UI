@@ -142,11 +142,13 @@ const StudentNumberPage = () => {
 
       setStudentNumber(number);
 
+      localStorage.setItem("studentNumber", number);
+
       navigate("/name");
     } else {
       notice({
         type: "SUCCESS",
-        message: `${number}는 유효한 학번이 아닙니다~`,
+        message: `${number}(은/는) 유효한 학번이 아닙니다~`,
       });
     }
   };

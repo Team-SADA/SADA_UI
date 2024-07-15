@@ -32,6 +32,17 @@ main {
   padding: 0 1rem;
   min-height: calc(100vh - 8rem);
   width: min(100%, 45rem);
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    img {
+      width: 2rem;
+    }
+  }
 }
 
 body {

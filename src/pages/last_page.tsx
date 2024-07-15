@@ -8,7 +8,6 @@ const sortDictionaryByValue = (dict: any) => {
 
   // Sort the array based on the value
   items.sort((a, b) => (a[1] as number) - (b[1] as number));
-  console.log(items);
 
   return items;
 };

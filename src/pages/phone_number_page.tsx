@@ -14,9 +14,12 @@ const PhoneNumberPage = () => {
 
   return (
     <main>
-      전화번호
+      <h1>
+        <img src="logo.png" alt="" />
+        전화번호
+      </h1>
       <button className="btn-flat" onClick={submitHandler}>
-        asdf
+        넘어가기
       </button>
     </main>
   );

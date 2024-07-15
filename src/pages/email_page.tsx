@@ -2,6 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import classes from "./email_page.module.scss";
 import { useNavigate } from "react-router-dom";
 import GlobalContext from "../components/context/context";
+import { useNotification } from "../components/notification/NotificationProvider";
+
+const json: any = require("../components/context/data.json");
 
 const shuffle = (str: string) =>
   str
@@ -26,6 +29,8 @@ const EmailPage = () => {
   const { studentNumber } = useContext(GlobalContext);
 
   const navigate = useNavigate();
+
+  const notice = useNotification();
 
   const type = (text: string) => {
     if (text === "delete") {
@@ -59,12 +64,24 @@ const EmailPage = () => {
   const submitHandler = (_: any) => {
     console.log(savedText + email);
     console.log(studentNumber);
-    clearInterval(intervalId);
-    navigate("/dorm-room");
+
+    const hakbuns = Object.keys(json).filter((x) => x[0] == studentNumber[0]);
+
+    const correctEmail =
+      "gbs.s2400" +
+      (hakbuns.indexOf(studentNumber) + 1).toString() +
+      "@ggh.goe.go.kr";
+
+    if (savedText + email == correctEmail) {
+      navigate("/dorm-room");
+      clearInterval(intervalId);
+    } else {
+      notice({ type: "ERROR", message: "그게 아닐 텐데" });
+    }
   };
 
   return (
-    <main className={classes.main}>
+    <main>
       <h1>
         <img src="logo.png" alt="" />
         Email
@@ -94,7 +111,9 @@ const EmailPage = () => {
         </div>
       </div>
       <p className={classes.time}>
-        문자에 마우스를 가져다 대면 글자가 입력됩니다! <br></br>
+        문자에 마우스를 가져다 대면 글자가 입력됩니다! gbs.s******@ggh.goe.go.kr
+        형식으로 입력해 주세요!
+        <br></br>
         개발자의 힌트: {timeLeft}초 안에 글자가 섞입니다!<br></br>
         <br></br>
         +개발자의 게으름으로 인해 백스페이스 버튼이 없사오니 실수가 나면

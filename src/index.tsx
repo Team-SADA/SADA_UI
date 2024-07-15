@@ -5,7 +5,7 @@ import "./index.scss";
 
 import NotificationProvider from "./components/notification/NotificationProvider";
 import MyGlobalContext from "./components/context/context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import FirstPage from "./pages/first_page";
 import EmailPage from "./pages/email_page";
@@ -40,16 +40,38 @@ export default function App() {
     setTime(0);
     setIntervalId(
       setInterval(() => {
-        setTime((prevState) => (prevState as number) + 1);
-        // localStorage.setItem("someVarKey", );
+        setTime((prevState) => {
+          const newTime = (prevState as number) + 1;
+          localStorage.setItem("time", newTime.toString());
+          return newTime;
+        });
       }, 1000)
     );
   };
 
   const stopTime = () => {
     setIsOver(true);
-    clearInterval(intervalId as ReturnType<typeof setInterval>);
+    clearInterval(intervalId!);
+    localStorage.clear();
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("time") != null) {
+      setTime(parseInt(localStorage.getItem("time")!));
+      setIntervalId(
+        setInterval(() => {
+          setTime((prevState) => {
+            const newTime = (prevState as number) + 1;
+            localStorage.setItem("time", newTime.toString());
+            return newTime;
+          });
+        }, 1000)
+      );
+    }
+    if (localStorage.getItem("studentNumber") != null) {
+      setStudentNumber(localStorage.getItem("studentNumber")!);
+    }
+  }, []);
 
   return (
     <div className="overlays">

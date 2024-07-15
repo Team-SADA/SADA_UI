@@ -43,8 +43,9 @@ const FirstPage = () => {
             </div>
           </span>
           <div className={classes.control}>
-            <span>개인정보 수집에 동의합니까?</span>
+            <label htmlFor="input">개인정보 수집에 동의합니까?</label>
             <input
+              id="input"
               checked={agree}
               type="checkbox"
               onClick={checkboxClickHandler}
