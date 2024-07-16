@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import classes from "./name_page.module.scss";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../components/context/context";
+import {useNotification} from "../components/notification/NotificationProvider";
 
 const DEBUG = false;
 
@@ -42,35 +43,48 @@ interface Block {
 
 export default function NamePage() {
   const navigate = useNavigate();
-
+  const notice = useNotification();
   const { studentNumber } = useContext(GlobalContext);
 
   const submitHandler = () => {
+    if (name !== json[studentNumber]) {
+      notice({
+        type: "SUCCESS",
+        message: "학번과 이름이 안 맞네요~",
+      });
+      return;
+    }
     clearTimeout(timeoutId!);
     console.log(studentNumber);
     console.log(json[studentNumber]);
+    notice({
+      type: "SUCCESS",
+      message: "이름 쓰기 성공!",
+    });
     navigate("/birthday");
   };
 
   const [mouseX, setMouseX] = useState(window.innerWidth / 2);
   const [charQueue, setCharQueue] = useState<string[]>(nameChars);
   const [newCharIndex, setNewCharIndex] = useState(0);
-  const [listener, setListener] = useState<EventListener | null>(null);
-  const [name, setName] = useState<(string | null)[]>([null, null, null]);
+  const [basketChars, setBasketChars] = useState<(string | null)[]>([null]);
+  const [name, setName] = useState<string>("");
 
   const [collide, setCollide] = useState(false);
-
-  const shuffleName = () => {
-    setName(shuffle(name));
-  }
 
   const randomLeft = () => Math.random() * window.innerWidth * 0.5;
 
   const createNewBlock = (): Block => {
     // if (newCharIndex >= charQueue.length) return { char: "", left: 0 };
     const data = charQueue[newCharIndex % charQueue.length];
-    setNewCharIndex(newCharIndex % charQueue.length + 1);
-    return { char: data, left: randomLeft() };
+    setNewCharIndex((newCharIndex + 1) % charQueue.length);
+    let left = randomLeft();
+    while (
+        blockList[(newCharIndex - 1) % charQueue.length] !== undefined &&
+        Math.abs(left - blockList[(newCharIndex - 1) % charQueue.length].left) < 200
+        )
+      left = randomLeft();
+    return { char: data, left: left };
   };
 
   const [blockList, setBlockList] = useState<Block[]>([]);
@@ -115,8 +129,8 @@ export default function NamePage() {
           const basketRelativeBlockX = collidedBlock.left - mouseX + window.innerWidth / 4;
           console.log('block: ', collidedBlock.char, basketRelativeBlockX);
           if (-60 <= basketRelativeBlockX && basketRelativeBlockX <= 60) {
-            if (!name.includes(collidedBlock.char)) {
-              setName([...name.slice(1), collidedBlock.char]);
+            if (!basketChars.includes(collidedBlock.char)) {
+              setBasketChars([...basketChars.slice(1), collidedBlock.char]);
               setCollide(true);
             }
           }
@@ -128,24 +142,24 @@ export default function NamePage() {
   return (
     <section className={classes.section}>
       <div className={classes.header}>
-        <h2>이름을 입력하세요</h2>
-        <span>
-          {name.map(char => (
-            <span>{char !== null ? char : '_'} </span>
-          ))}
-        </span>
-        <div className={classes.description}>
-          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
-          바구니에는 글자를 최대 5개 넣을 수 있어요!
-          글자를 모두 담으면 바구니에서 글자를 선택해서 이름을 입력하세요!
-          바구니가 꽉 찼을 때 글자를 새로 담으면 이전 글자는 넘쳐서 떨어집니다... 조심하세요!
+        <div className={classes.title}>
+          <h2>이름을 입력하세요</h2>
+          <input type="text" value={name} readOnly/>
+          <button className="btn-flat" onClick={() => setName(name.slice(0, -1))}>
+            Backspace
+          </button>
+          <button className="btn-flat" onClick={() => setName(shuffle(name.split("")).join(""))}>
+            이름 글자 섞기
+          </button>
+          <button className="btn-flat" onClick={submitHandler}>
+            넘어가기
+          </button>
         </div>
-        <button className="btn-flat" onClick={shuffleName}>
-          이름 섞기
-        </button>
-        <button className="btn-flat" onClick={submitHandler}>
-          넘어가기
-        </button>
+        <div className={classes.description}>
+          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!<br/>
+          바구니에는 글자 하나만 넣을 수 있어요!<br/>
+          입력 버튼을 눌러 바구니에 담은 글자로 이름을 입력하세요!
+        </div>
       </div>
       <div className={classes.nameTable}>
         {blockList.map((block) => (
@@ -154,16 +168,19 @@ export default function NamePage() {
           </span>
         ))}
       </div>
-      <div className={classes.basket} style={{left: mouseX - 60, ...(collide ? {backgroundColor: 'red'} : {})}}>
-        <img src={"./basket.png"} alt="basket" />
-        {/*
-        <button type="button" className={classes.button1} onClick={() => {}}>
+      <div className={classes.basket} style={{left: mouseX - 60}}>
+        <img src={"./basket.png"} alt="basket"/>
+        <div>
+          {basketChars.map(char => (
+              <span style={collide ? {color: '#6473E6'} : {}}>{char !== null ? char : '_'} </span>
+          ))}
+        </div>
+        <button type="button" className={`btn-flat ${classes.button1}`} onClick={() => {
+          setName(name + basketChars[0]);
+          setBasketChars([...basketChars.slice(1)]);
+        }}>
           입력
         </button>
-        <button type="button" className={classes.button2} onClick={() => {}}>
-          버리기
-        </button>
-        */}
       </div>
     </section>
   );

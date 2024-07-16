@@ -4,10 +4,21 @@
   user-select: none;
 
   .header {
-    h2 {
+    .title {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: center;
+
+      h2 {
+      }
+      input {
+        width: 180px;
+        height: 40px;
+        font-size: 25px;
+      }
     }
-    input {
-    }
+
     .description {
     }
   }
@@ -15,6 +26,7 @@
   .nameTable {
     position: relative;
     width: 100%;
+    margin-top: 60px;
     span {
       position: absolute;
       animation: fall 1.2s ease-in forwards;
@@ -36,18 +48,30 @@
       position: absolute;
       width: 100%;
       height: 100%;
+      z-index: 0;
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+
+      span {
+        font-size: 30px;
+        z-index: 1;
+      }
     }
 
     button {
       position: absolute;
-      width: 80%;
-      height: 20%;
+      width: 60%;
+      height: 30%;
       left: 50%;
-      opacity: 70%;
+      opacity: 90%;
+      padding: 0;
     }
 
     .button1 {
-      top: 35%;
+      top: 45%;
       transform: translate(-50%, 50%);
     }
 
