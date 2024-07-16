@@ -3,7 +3,7 @@ import classes from "./name_page.module.scss";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../components/context/context";
 
-const DEBUG = true;
+const DEBUG = false;
 
 const json: any = require("../components/context/data.json");
 
@@ -19,7 +19,7 @@ const nameChars = [
   "헌혁현형혜호홍환황효후훈휘흔희",
 ]
   .join("")
-  .split(""); // 135 = 15 * 9 characters + 1
+  .split(""); // 136 = 15 * 9 + 1
 
 function shuffle(array: any[]) {
   let currentIndex = array.length;
@@ -55,19 +55,30 @@ export default function NamePage() {
   const [mouseX, setMouseX] = useState(window.innerWidth / 2);
   const [charQueue, setCharQueue] = useState<string[]>(nameChars);
   const [newCharIndex, setNewCharIndex] = useState(0);
+  const [listener, setListener] = useState<EventListener | null>(null);
+  const [name, setName] = useState<(string | null)[]>([null, null, null]);
 
-  const randomLeft = () => Math.random() * window.innerWidth * 0.6;
+  const [collide, setCollide] = useState(false);
+
+  const shuffleName = () => {
+    setName(shuffle(name));
+  }
+
+  const randomLeft = () => Math.random() * window.innerWidth * 0.5;
 
   const createNewBlock = (): Block => {
-    if (newCharIndex >= charQueue.length) return { char: "", left: 0 };
-    const data = charQueue[newCharIndex];
-    setNewCharIndex(newCharIndex + 1);
+    // if (newCharIndex >= charQueue.length) return { char: "", left: 0 };
+    const data = charQueue[newCharIndex % charQueue.length];
+    setNewCharIndex(newCharIndex % charQueue.length + 1);
     return { char: data, left: randomLeft() };
   };
 
   const [blockList, setBlockList] = useState<Block[]>([]);
   const [timeoutId, setTimeoutId] = useState<ReturnType<
-    typeof setInterval
+    typeof setTimeout
+  > | null>(null);
+  const [intervalId, setIntervalId] = useState<ReturnType<
+      typeof setInterval
   > | null>(null);
 
   useEffect(() => {
@@ -75,9 +86,7 @@ export default function NamePage() {
     if (!ignore) {
       if (DEBUG) console.log("load");
       setCharQueue(shuffle(nameChars));
-      document.addEventListener("mousemove", (event) =>
-        setMouseX(event.clientX)
-      );
+      document.addEventListener("mousemove", (event) => setMouseX(event.clientX));
     }
     return () => {
       ignore = true;
@@ -88,21 +97,52 @@ export default function NamePage() {
     setTimeoutId(
       setTimeout(() => {
         const newBlock = createNewBlock();
-        if (DEBUG) console.log(newCharIndex, charQueue, newBlock);
+        if (DEBUG) console.log(newCharIndex, newBlock);
         if (newBlock.char !== "") setBlockList([...blockList, newBlock]);
       }, 300)
     );
   }, [charQueue, newCharIndex]);
 
+  useEffect(() => {
+    clearInterval(intervalId!);
+    setIntervalId(
+      setInterval(() => {
+        if (collide) setCollide(false);
+        const collideIndex = (newCharIndex - 4 + charQueue.length) % charQueue.length;
+        if (DEBUG) console.log('collide', collideIndex);
+        const collidedBlock = blockList[collideIndex];
+        if (collidedBlock !== undefined) {
+          const basketRelativeBlockX = collidedBlock.left - mouseX + window.innerWidth / 4;
+          console.log('block: ', collidedBlock.char, basketRelativeBlockX);
+          if (-60 <= basketRelativeBlockX && basketRelativeBlockX <= 60) {
+            if (!name.includes(collidedBlock.char)) {
+              setName([...name.slice(1), collidedBlock.char]);
+              setCollide(true);
+            }
+          }
+        }
+      }, 10)
+    );
+  }, [mouseX, newCharIndex]);
+
   return (
     <section className={classes.section}>
       <div className={classes.header}>
         <h2>이름을 입력하세요</h2>
-        <input type="text" value={"123"} readOnly={true} />
+        <span>
+          {name.map(char => (
+            <span>{char !== null ? char : '_'} </span>
+          ))}
+        </span>
         <div className={classes.description}>
-          바구니에 글자를 담아보아요. 글자 순서는 상관없어요. 같은 글자는 두 번
-          다시 나타나지 않아요. 글자를 놓쳤다면... 안타까운 거죠
+          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
+          바구니에는 글자를 최대 5개 넣을 수 있어요!
+          글자를 모두 담으면 바구니에서 글자를 선택해서 이름을 입력하세요!
+          바구니가 꽉 찼을 때 글자를 새로 담으면 이전 글자는 넘쳐서 떨어집니다... 조심하세요!
         </div>
+        <button className="btn-flat" onClick={shuffleName}>
+          이름 섞기
+        </button>
         <button className="btn-flat" onClick={submitHandler}>
           넘어가기
         </button>
@@ -114,14 +154,16 @@ export default function NamePage() {
           </span>
         ))}
       </div>
-      <div className={classes.basket} style={{ left: mouseX - 60 }}>
+      <div className={classes.basket} style={{left: mouseX - 60, ...(collide ? {backgroundColor: 'red'} : {})}}>
         <img src={"./basket.png"} alt="basket" />
+        {/*
         <button type="button" className={classes.button1} onClick={() => {}}>
           입력
         </button>
         <button type="button" className={classes.button2} onClick={() => {}}>
           버리기
         </button>
+        */}
       </div>
     </section>
   );
