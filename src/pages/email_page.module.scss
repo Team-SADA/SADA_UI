@@ -69,16 +69,6 @@ section {
   }
 }
 
-.delete {
-  margin-top: 2rem;
-  padding: 1rem;
-  width: 100%;
-  &:hover {
-    color: white;
-    background-color: green;
-  }
-}
-
 .keyboard {
   display: grid;
   grid-template-columns: auto auto auto auto auto auto auto auto;
@@ -87,12 +77,21 @@ section {
   button {
     width: 100%;
     height: 2em;
+    border-radius: 0.5rem;
   }
   button:hover {
     color: white;
     background-color: green;
   }
-  .clearbtn {
-    width: 100%;
+}
+
+.delete {
+  margin-top: 2rem;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  width: 100%;
+  &:hover {
+    color: white;
+    background-color: green;
   }
 }

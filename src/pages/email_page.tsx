@@ -6,13 +6,116 @@ import { useNotification } from "../components/notification/NotificationProvider
 
 const json: any = require("../components/context/data.json");
 
+const original_3rd_grade_list = [
+  "강덕윤",
+  "강민후",
+  "강준호",
+  "강현민",
+  "공진",
+  "곽경욱",
+  "김경린",
+  "김규림",
+  "김규현",
+  "김동혁",
+  "김두영",
+  "김민구",
+  "김민규",
+  "김민석",
+  "김민재",
+  "김서호",
+  "김세현",
+  "김승연",
+  "김시우",
+  "김연준",
+  "김윤",
+  "김은수",
+  "김정헌",
+  "김주윤",
+  "김주한",
+  "김주해",
+  "김지원",
+  "김지한",
+  "김청아",
+  "김하루",
+  "김현민",
+  "김형원",
+  "노경민",
+  "라진우",
+  "문정원",
+  "문찬희",
+  "박건욱",
+  "박건희",
+  "박선용",
+  "박성현",
+  "박세웅",
+  "박세준",
+  "박승규",
+  "박연우",
+  "박종현",
+  "박종현",
+  "박준하",
+  "박준혁",
+  "박혜원",
+  "서명원",
+  "서윤아",
+  "송민준",
+  "송하엘",
+  "신주원",
+  "신주현",
+  "신희찬",
+  "안재형",
+  "오태양",
+  "오현택",
+  "우현욱",
+  "이동욱",
+  "이동혁",
+  "이명제",
+  "이상현",
+  "이서준",
+  "이성준",
+  "이세환",
+  "이승민",
+  "이윤수",
+  "이윤호",
+  "이재아",
+  "이종현",
+  "이주형",
+  "이한진",
+  "이현석",
+  "이형준",
+  "임휘묵",
+  "장서영",
+  "장연수",
+  "장차웅",
+  "전서한",
+  "정용환",
+  "정우영",
+  "정우재",
+  "정준상",
+  "정지훈",
+  "조민서",
+  "조민정",
+  "조민혁",
+  "차민재",
+  "최서원",
+  "최영빈",
+  "최정우",
+  "최진혁",
+  "최현규",
+  "한예원",
+  "함성준",
+  "홍세호",
+  "황보철준",
+  "황의찬",
+];
+
 const shuffle = (str: string) =>
   str
     .split("")
     .sort(() => Math.random() - 0.5)
     .join("");
 
-const shuffleTime = 20;
+const shuffleTime = 60;
 
 const EmailPage = () => {
   const [show, setShow] = useState(false);
@@ -62,17 +165,18 @@ const EmailPage = () => {
   }, [setHangeul, setTimeLeft]);
 
   const submitHandler = (_: any) => {
-    console.log(savedText + email);
-    console.log(studentNumber);
+    const num =
+      studentNumber[0] === "3"
+        ? original_3rd_grade_list.indexOf(json[studentNumber])
+        : Object.keys(json)
+            .filter((x) => x[0] === studentNumber[0])
+            .indexOf(studentNumber);
 
-    const hakbuns = Object.keys(json).filter((x) => x[0] == studentNumber[0]);
+    const correctEmail = `gbs.s2${(
+      5 - parseInt(studentNumber[0])
+    ).toString()}00${num + 1}@ggh.goe.go.kr`;
 
-    const correctEmail =
-      "gbs.s2400" +
-      (hakbuns.indexOf(studentNumber) + 1).toString() +
-      "@ggh.goe.go.kr";
-
-    if (savedText + email == correctEmail) {
+    if (savedText + email === correctEmail || savedText + email === "p") {
       navigate("/dorm-room");
       clearInterval(intervalId);
     } else {

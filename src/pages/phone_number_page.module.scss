@@ -1,0 +1,28 @@
+.main {
+  section {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    text {
+      font-size: 1rem;
+    }
+    .control {
+      display: flex;
+      justify-content: center;
+      button {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        &:disabled {
+          background-color: grey;
+          color: white;
+        }
+      }
+    }
+  }
+  .submit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

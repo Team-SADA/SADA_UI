@@ -137,7 +137,7 @@ const StudentNumberPage = () => {
     if (Object.keys(json).includes(number)) {
       notice({
         type: "SUCCESS",
-        message: `축하합니다${number}!`,
+        message: `환영합니다!`,
       });
 
       setStudentNumber(number);

@@ -55,6 +55,10 @@ export default function App() {
     localStorage.clear();
   };
 
+  const goBack = () => {
+    setIsOver(false);
+  };
+
   useEffect(() => {
     if (localStorage.getItem("time") != null) {
       setTime(parseInt(localStorage.getItem("time")!));
@@ -82,7 +86,13 @@ export default function App() {
       )}
       {/* <div className={`time center`}>클리어 타임: {secondsToMMSS(123)}</div> */}
       <MyGlobalContext.Provider
-        value={{ studentNumber, setStudentNumber, activateTime, stopTime }}
+        value={{
+          studentNumber,
+          setStudentNumber,
+          activateTime,
+          stopTime,
+          goBack,
+        }}
       >
         <NotificationProvider>
           <BrowserRouter>

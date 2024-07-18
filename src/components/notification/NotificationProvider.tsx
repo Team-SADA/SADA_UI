@@ -5,11 +5,12 @@ import {
   useContext,
   useReducer,
   Dispatch,
-  useState,
 } from "react";
 
 import Portal from "../UI/Portal";
 import Notification from "./Notification";
+
+import { v4 } from "uuid";
 
 import classes from "./NotificationProvider.module.scss";
 
@@ -79,7 +80,7 @@ export const useNotification = () => {
     dispatch({
       type: "ADD_NOTIFICATION",
       payload: {
-        id: crypto.randomUUID(),
+        id: v4(),
         ...props,
       },
     });

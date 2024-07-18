@@ -16,6 +16,21 @@
     flex-direction: column;
     gap: 2rem;
 
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0;
+    }
+
+    .yakgwan {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    em {
+      // text-decoration: line-through;
+      font-weight: bold;
+    }
+
     .control {
       background-color: white;
       padding: 1rem;
@@ -27,20 +42,17 @@
       align-items: center;
     }
 
-    .yakgwan {
-      font-size: 1.25rem;
-    }
-
-    em {
-      text-decoration: line-through;
-    }
-
     button {
       background-color: var(--color-light);
     }
 
-    .underbar {
-      text-decoration: underline;
+    .fakeclick {
+      font-weight: bold;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
 
     .red {

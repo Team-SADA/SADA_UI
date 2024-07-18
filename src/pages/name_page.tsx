@@ -2,9 +2,8 @@ import { useNavigate } from "react-router";
 import classes from "./name_page.module.scss";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../components/context/context";
-import {useNotification} from "../components/notification/NotificationProvider";
-
-const DEBUG = false;
+import { useNotification } from "../components/notification/NotificationProvider";
+import { v4 } from "uuid";
 
 const json: any = require("../components/context/data.json");
 
@@ -22,7 +21,7 @@ const nameChars = [
   .join("")
   .split(""); // 136 = 15 * 9 + 1
 
-function shuffle(array: any[]) {
+const shuffle = (array: any[]) => {
   let currentIndex = array.length;
   while (currentIndex !== 0) {
     let randomIndex = Math.floor(Math.random() * currentIndex);
@@ -32,13 +31,15 @@ function shuffle(array: any[]) {
       array[currentIndex],
     ];
   }
-  if (DEBUG) console.log(array.join(""));
   return array;
-}
+};
+
+const randomLeft = () => Math.random() * window.innerWidth * 0.5;
 
 interface Block {
   char: string;
   left: number;
+  id: string;
 }
 
 export default function NamePage() {
@@ -46,17 +47,60 @@ export default function NamePage() {
   const notice = useNotification();
   const { studentNumber } = useContext(GlobalContext);
 
+  const [mouseX, setMouseX] = useState(window.innerWidth / 2);
+  const [basketChar, setBasketChar] = useState<string | null>(null);
+  const [name, setName] = useState<string>("");
+  const [blockList, setBlockList] = useState<Block[]>([]);
+  const [intervalId, setIntervalId] = useState<ReturnType<
+    typeof setInterval
+  > | null>(null);
+
+  useEffect(() => {
+    const listener = (event: any) => setMouseX(event.clientX);
+
+    document.addEventListener("mousemove", listener);
+
+    return () => {
+      document.removeEventListener("mousemove", listener);
+    };
+  }, [studentNumber]);
+
+  useEffect(() => {
+    if (studentNumber) {
+      const newList = shuffle(
+        shuffle(nameChars)
+          .slice(0, 60)
+          .concat(Array(5).fill(json[studentNumber].split("")).flat())
+      );
+
+      console.log(json[studentNumber]);
+      console.log(newList);
+
+      let index = 0;
+
+      setIntervalId(
+        setInterval(() => {
+          setBlockList((prev) => [
+            ...prev,
+            { char: newList[index], left: randomLeft(), id: v4() },
+          ]);
+          index = (index + 1) % newList.length;
+        }, 300)
+      );
+    }
+  }, [studentNumber]);
+
   const submitHandler = () => {
     if (name !== json[studentNumber]) {
       notice({
-        type: "SUCCESS",
+        type: "ERROR",
         message: "학번과 이름이 안 맞네요~",
       });
       return;
     }
-    clearTimeout(timeoutId!);
-    console.log(studentNumber);
-    console.log(json[studentNumber]);
+
+    clearInterval(intervalId!);
+
     notice({
       type: "SUCCESS",
       message: "이름 쓰기 성공!",
@@ -64,124 +108,82 @@ export default function NamePage() {
     navigate("/birthday");
   };
 
-  const [mouseX, setMouseX] = useState(window.innerWidth / 2);
-  const [charQueue, setCharQueue] = useState<string[]>(nameChars);
-  const [newCharIndex, setNewCharIndex] = useState(0);
-  const [basketChars, setBasketChars] = useState<(string | null)[]>([null]);
-  const [name, setName] = useState<string>("");
-
-  const [collide, setCollide] = useState(false);
-
-  const randomLeft = () => Math.random() * window.innerWidth * 0.5;
-
-  const createNewBlock = (): Block => {
-    // if (newCharIndex >= charQueue.length) return { char: "", left: 0 };
-    const data = charQueue[newCharIndex % charQueue.length];
-    setNewCharIndex((newCharIndex + 1) % charQueue.length);
-    let left = randomLeft();
-    while (
-        blockList[(newCharIndex - 1) % charQueue.length] !== undefined &&
-        Math.abs(left - blockList[(newCharIndex - 1) % charQueue.length].left) < 200
-        )
-      left = randomLeft();
-    return { char: data, left: left };
-  };
-
-  const [blockList, setBlockList] = useState<Block[]>([]);
-  const [timeoutId, setTimeoutId] = useState<ReturnType<
-    typeof setTimeout
-  > | null>(null);
-  const [intervalId, setIntervalId] = useState<ReturnType<
-      typeof setInterval
-  > | null>(null);
-
-  useEffect(() => {
-    let ignore = false;
-    if (!ignore) {
-      if (DEBUG) console.log("load");
-      setCharQueue(shuffle(nameChars));
-      document.addEventListener("mousemove", (event) => setMouseX(event.clientX));
-    }
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    setTimeoutId(
-      setTimeout(() => {
-        const newBlock = createNewBlock();
-        if (DEBUG) console.log(newCharIndex, newBlock);
-        if (newBlock.char !== "") setBlockList([...blockList, newBlock]);
-      }, 300)
-    );
-  }, [charQueue, newCharIndex]);
-
-  useEffect(() => {
-    clearInterval(intervalId!);
-    setIntervalId(
-      setInterval(() => {
-        if (collide) setCollide(false);
-        const collideIndex = (newCharIndex - 4 + charQueue.length) % charQueue.length;
-        if (DEBUG) console.log('collide', collideIndex);
-        const collidedBlock = blockList[collideIndex];
-        if (collidedBlock !== undefined) {
-          const basketRelativeBlockX = collidedBlock.left - mouseX + window.innerWidth / 4;
-          console.log('block: ', collidedBlock.char, basketRelativeBlockX);
-          if (-60 <= basketRelativeBlockX && basketRelativeBlockX <= 60) {
-            if (!basketChars.includes(collidedBlock.char)) {
-              setBasketChars([...basketChars.slice(1), collidedBlock.char]);
-              setCollide(true);
-            }
-          }
-        }
-      }, 10)
-    );
-  }, [mouseX, newCharIndex]);
-
   return (
-    <section className={classes.section}>
-      <div className={classes.header}>
+    <main className={classes.section}>
+      <header className={classes.header}>
         <div className={classes.title}>
           <h2>이름을 입력하세요</h2>
-          <input type="text" value={name} readOnly/>
-          <button className="btn-flat" onClick={() => setName(name.slice(0, -1))}>
-            Backspace
-          </button>
-          <button className="btn-flat" onClick={() => setName(shuffle(name.split("")).join(""))}>
-            이름 글자 섞기
-          </button>
-          <button className="btn-flat" onClick={submitHandler}>
-            넘어가기
-          </button>
+          <input type="text" value={name} readOnly />
+          <div>
+            <button
+              className="btn-flat"
+              onClick={() => setName(name.slice(0, -1))}
+            >
+              Backspace
+            </button>
+            <button
+              className="btn-flat"
+              onClick={() => {
+                let newName = shuffle(name.split("")).join("");
+                while (newName === name) {
+                  newName = shuffle(name.split("")).join("");
+                }
+                setName(newName);
+              }}
+            >
+              이름 글자 섞기
+            </button>
+          </div>
         </div>
-        <div className={classes.description}>
-          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!<br/>
-          바구니에는 글자 하나만 넣을 수 있어요!<br/>
+        <div>
+          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
+          <br />
+          바구니에는 글자 하나만 넣을 수 있어요!
+          <br />
           입력 버튼을 눌러 바구니에 담은 글자로 이름을 입력하세요!
         </div>
-      </div>
+      </header>
       <div className={classes.nameTable}>
         {blockList.map((block) => (
-          <span className={classes.line} style={{ left: block.left }}>
+          <span
+            className={classes.line}
+            style={{ left: block.left }}
+            key={block.id}
+            onAnimationEnd={() => {
+              const relativeDistance =
+                block.left -
+                mouseX +
+                16 +
+                (window.innerWidth > 720 ? (window.innerWidth - 720) / 2 : 0);
+              if (relativeDistance >= -65 && relativeDistance <= 65) {
+                setBasketChar(block.char);
+              }
+              setBlockList((prev) => prev.filter((b) => b.id !== block.id));
+            }}
+          >
             {block.char}
           </span>
         ))}
       </div>
-      <div className={classes.basket} style={{left: mouseX - 60}}>
-        <img src={"./basket.png"} alt="basket"/>
+      <div className={classes.basket} style={{ left: mouseX - 60 }}>
+        <img src={"./basket.png"} alt="basket" />
         <div>
-          {basketChars.map(char => (
-              <span style={collide ? {color: '#6473E6'} : {}}>{char !== null ? char : '_'} </span>
-          ))}
+          <span>{basketChar !== null ? basketChar : "_"} </span>
         </div>
-        <button type="button" className={`btn-flat ${classes.button1}`} onClick={() => {
-          setName(name + basketChars[0]);
-          setBasketChars([...basketChars.slice(1)]);
-        }}>
+        <button
+          className={`btn-flat ${classes.button1}`}
+          onClick={() => {
+            setName(name + basketChar);
+            setBasketChar(null);
+          }}
+          disabled={basketChar === null}
+        >
           입력
         </button>
       </div>
-    </section>
+      <button className={`btn-flat ${classes.submit}`} onClick={submitHandler}>
+        넘어가기
+      </button>
+    </main>
   );
 }

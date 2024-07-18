@@ -5,6 +5,7 @@ export type GlobalContent = {
   setStudentNumber: (c: string) => void;
   activateTime: () => void;
   stopTime: () => void;
+  goBack: () => void;
 };
 
 const GlobalContext = createContext<GlobalContent>({
@@ -12,6 +13,7 @@ const GlobalContext = createContext<GlobalContent>({
   setStudentNumber: () => {},
   activateTime: () => {},
   stopTime: () => {},
+  goBack: () => {},
 });
 
 export default GlobalContext;

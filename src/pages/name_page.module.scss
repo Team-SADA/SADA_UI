@@ -1,25 +1,27 @@
 .section {
   position: relative;
-  padding: 0 25%;
   user-select: none;
 
   .header {
     .title {
       display: flex;
-      flex-direction: row;
-      gap: 10px;
+      justify-content: space-between;
+      gap: 0.5rem;
       align-items: center;
 
-      h2 {
-      }
       input {
-        width: 180px;
-        height: 40px;
-        font-size: 25px;
+        width: 8rem;
+        font-size: 1.5rem;
       }
-    }
+      :not(input) {
+        white-space: no-wrap;
+        word-break: break-all;
+      }
 
-    .description {
+      div {
+        display: flex;
+        gap: 1rem;
+      }
     }
   }
 
@@ -42,7 +44,7 @@
     position: fixed;
     width: 120px;
     height: 90px;
-    bottom: 40px;
+    top: 660px;
 
     img {
       position: absolute;
@@ -80,6 +82,12 @@
       transform: translate(-50%, 100%);
       color: red;
     }
+  }
+
+  .submit {
+    position: absolute;
+    top: 800px;
+    right: 0;
   }
 }
 
