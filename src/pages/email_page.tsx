@@ -147,7 +147,7 @@ const EmailPage = () => {
     setShow(true);
     setTimeout(() => {
       setIsDisabled(false);
-    }, 1000);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -178,6 +178,7 @@ const EmailPage = () => {
 
     if (savedText + email === correctEmail || savedText + email === "p") {
       navigate("/dorm-room");
+      localStorage.setItem("email", correctEmail);
       clearInterval(intervalId);
     } else {
       notice({ type: "ERROR", message: "그게 아닐 텐데" });

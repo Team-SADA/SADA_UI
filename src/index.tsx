@@ -15,6 +15,8 @@ import BirthdayPage from "./pages/birthday_page";
 import DormRoomPage from "./pages/dorm_room_page";
 import PhoneNumberPage from "./pages/phone_number_page";
 import LastPage from "./pages/last_page";
+import NonStudentNamePage from "./pages/non_student/name_page";
+import NonStudentEmailPage from "./pages/non_student/email_page";
 
 const secondsToMMSS = (seconds: number) => {
   // Calculate the minutes and remaining seconds
@@ -37,6 +39,9 @@ export default function App() {
   const [isOver, setIsOver] = useState<boolean>(false);
 
   const activateTime = () => {
+    if (intervalId !== null) {
+      clearInterval(intervalId);
+    }
     setTime(0);
     setIntervalId(
       setInterval(() => {
@@ -52,7 +57,6 @@ export default function App() {
   const stopTime = () => {
     setIsOver(true);
     clearInterval(intervalId!);
-    localStorage.clear();
   };
 
   const goBack = () => {
@@ -100,11 +104,23 @@ export default function App() {
               <Route path="/" element={<FirstPage />} />
               <Route path="student-number" element={<StudentNumberPage />} />
               <Route path="name" element={<NamePage />} />
-              <Route path="birthday" element={<BirthdayPage />} />
+              <Route
+                path="birthday"
+                element={<BirthdayPage nextLink="/email" />}
+              />
               <Route path="email" element={<EmailPage />} />
               <Route path="dorm-room" element={<DormRoomPage />} />
               <Route path="phone-number" element={<PhoneNumberPage />} />
               <Route path="last-page" element={<LastPage />} />
+              <Route path="non-student">
+                <Route path="name" element={<NonStudentNamePage />} />
+                <Route
+                  path="birthday"
+                  element={<BirthdayPage nextLink="../email" />}
+                />
+                <Route path="email" element={<NonStudentEmailPage />} />
+                <Route path="phone-number" element={<PhoneNumberPage />} />
+              </Route>
             </Routes>
           </BrowserRouter>
         </NotificationProvider>

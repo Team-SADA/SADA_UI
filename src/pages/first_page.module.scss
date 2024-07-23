@@ -1,11 +1,9 @@
 .index {
   background-color: var(--main-color);
-  padding: 2rem;
+  padding: 2rem 0;
 
   main {
-    margin: 2rem auto;
-    padding: 0 1rem;
-    min-height: calc(100vh - 8rem);
+    height: 100%;
     width: min(100%, 45rem);
   }
 
@@ -14,11 +12,24 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
     gap: 2rem;
+    padding-bottom: 2rem;
+
+    img {
+      width: 25%;
+    }
 
     h1 {
+      span {
+        font-family: "Playfair Display";
+        font-weight: bold;
+        font-style: italic;
+        font-size: 2rem;
+      }
+
       font-size: 2rem;
-      margin-bottom: 0;
+      margin: 0;
     }
 
     .yakgwan {
@@ -57,10 +68,6 @@
 
     .red {
       color: red;
-    }
-
-    img {
-      width: 25%;
     }
   }
 }

@@ -23,9 +23,10 @@ const PhoneNumberModal = ({ phoneNumber, show, close }: PropsType) => {
   const verificationHandler = async () => {
     notice({
       type: "SUCCESS",
-      message: "핸드폰으로 인증 문자를 보냈어요! 문자를 확인해주세요.",
+      message: "입력 완료! 수고했어요~",
     });
 
+    localStorage.setItem("phone-number", phoneNumber);
     navigate("/last-page");
   };
 

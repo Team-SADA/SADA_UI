@@ -34,7 +34,8 @@ const shuffle = (array: any[]) => {
   return array;
 };
 
-const randomLeft = () => Math.random() * window.innerWidth * 0.5;
+const randomLeft = () =>
+  Math.random() * (window.innerWidth > 720 ? 720 : window.innerWidth);
 
 interface Block {
   char: string;
@@ -105,14 +106,15 @@ export default function NamePage() {
       type: "SUCCESS",
       message: "이름 쓰기 성공!",
     });
+    localStorage.setItem("name", name);
     navigate("/birthday");
   };
 
   return (
     <main className={classes.section}>
       <header className={classes.header}>
+        <h2>이름을 입력하세요</h2>
         <div className={classes.title}>
-          <h2>이름을 입력하세요</h2>
           <input type="text" value={name} readOnly />
           <div>
             <button
@@ -136,11 +138,14 @@ export default function NamePage() {
           </div>
         </div>
         <div>
-          자신에 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
+          자신의 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
           <br />
           바구니에는 글자 하나만 넣을 수 있어요!
           <br />
-          입력 버튼을 눌러 바구니에 담은 글자로 이름을 입력하세요!
+          바구니의 입력 버튼을 눌러 바구니에 담은 글자를 이름에 추가하세요!
+          <br />
+          모든 글자를 추가하셨다면 '이름 글자 섞기' 버튼을 눌러 이름을 맞춰
+          보세요!
         </div>
       </header>
       <div className={classes.nameTable}>

@@ -1,0 +1,115 @@
+.section {
+  position: relative;
+  user-select: none;
+
+  .header {
+    .title {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      input {
+        width: 16rem;
+        font-size: 1.5rem;
+      }
+      :not(input) {
+        white-space: no-wrap;
+        word-break: break-all;
+      }
+
+      div {
+        display: flex;
+        gap: 1rem;
+      }
+    }
+  }
+
+  .nameTable {
+    position: relative;
+    width: 100%;
+    margin-top: 60px;
+    span {
+      position: absolute;
+      animation: fall 1.2s ease-in forwards;
+      font-size: 30px;
+    }
+  }
+
+  .line {
+    position: fixed;
+  }
+
+  .basket {
+    position: fixed;
+    width: 120px;
+    height: 90px;
+    top: 660px;
+
+    img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    div {
+      display: flex;
+      justify-content: center;
+
+      span {
+        font-size: 30px;
+        z-index: 1;
+      }
+    }
+
+    button {
+      position: absolute;
+      width: 60%;
+      height: 30%;
+      left: 50%;
+      opacity: 90%;
+      padding: 0;
+    }
+
+    .button1 {
+      top: 45%;
+      transform: translate(-50%, 50%);
+    }
+
+    .button2 {
+      bottom: 30%;
+      transform: translate(-50%, 100%);
+      color: red;
+    }
+  }
+
+  .submit {
+    position: absolute;
+    top: 800px;
+    right: 0;
+  }
+}
+
+@keyframes fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateY(400px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(400px);
+  }
+}

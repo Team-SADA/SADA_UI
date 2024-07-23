@@ -141,7 +141,6 @@ const StudentNumberPage = () => {
       });
 
       setStudentNumber(number);
-
       localStorage.setItem("studentNumber", number);
 
       navigate("/name");
