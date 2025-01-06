@@ -45,7 +45,7 @@ const NonStudentEmailPage = () => {
     setShow(true);
     setTimeout(() => {
       setIsDisabled(false);
-    }, 10000);
+    }, 5000);
   };
 
   useEffect(() => {

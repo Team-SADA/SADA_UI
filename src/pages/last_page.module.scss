@@ -1,15 +1,3 @@
-.list {
-  display: flex;
-  flex-direction: column;
-  height: 60vh;
-  padding: 1rem;
-  overflow-y: scroll;
-  gap: 1rem;
-  li {
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: space-between;
-  }
+.id {
+  margin-bottom: 1rem;
 }

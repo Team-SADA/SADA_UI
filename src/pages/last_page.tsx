@@ -3,20 +3,10 @@ import classes from "./last_page.module.scss";
 import GlobalContext from "../components/context/context";
 import { useNotification } from "../components/notification/NotificationProvider";
 
-const students = require("../components/context/data.json");
-
-const secondsToMMSS = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  const paddedSeconds = remainingSeconds.toString().padStart(2, "0");
-
-  return `${minutes}:${paddedSeconds}`;
-};
-
 const LastPage = () => {
-  const [list, setList] = useState([]);
+  const [id, setId] = useState("");
   const { stopTime, goBack } = useContext(GlobalContext);
+  const [isSent, setIsSent] = useState(false);
 
   const { studentNumber } = useContext(GlobalContext);
 
@@ -24,48 +14,11 @@ const LastPage = () => {
 
   useEffect(() => {
     stopTime();
-    getList();
 
     return () => {
       goBack();
     };
   }, [stopTime, goBack]);
-
-  const getList = async () => {
-    const response = await fetch(
-      "https://b58d-222-120-17-67.ngrok-free.app/data"
-    ).then((req) => console.log(req));
-
-    // setList(json);
-  };
-
-  const handleUpdate = async (name: string, score: number) => {
-    try {
-      const newData = { name, score };
-
-      const response = await fetch(
-        "https://b58d-222-120-17-67.ngrok-free.app/update-data",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newData),
-        }
-      );
-
-      if (response.ok) {
-        const responseData = await response.text();
-        notice({ type: "SUCCESS", message: responseData.toString() });
-        getList();
-      } else {
-        notice({ type: "ERROR", message: "갠춘에러" });
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
-      notice({ type: "ERROR", message: "에러" });
-    }
-  };
 
   const disable =
     localStorage.getItem("phone-number") === null ||
@@ -78,33 +31,41 @@ const LastPage = () => {
     let phoneNumber = localStorage.getItem("phone-number");
     const email = localStorage.getItem("email");
 
-    console.log(phoneNumber);
+    // console.log(phoneNumber);
 
     phoneNumber = phoneNumber!.split("-").join("");
 
-    console.log(studentNumber);
+    let reward;
+
+    if (parseInt(time!) >= 0 && parseInt(time!) <= 300) {
+      reward = 500;
+    } else if (parseInt(time!) > 300 && parseInt(time!) <= 600) {
+      reward = 400;
+    } else {
+      reward = 300;
+    }
 
     if (studentNumber === "") {
-      handleUpdate(name!, parseInt(time!));
+      console.log(
+        `https://sada.ziho.kr/coin/register?id=${id}&studentid=0&name=${name}&phone=${phoneNumber}&email=${email}`
+      );
       fetch(
-        `https://sada.ziho.kr/coin/register?id=0&name=${name}&phone=${phoneNumber}&email=${email}`
+        `https://sada.ziho.kr/coin/register?id=${id}&studentid=0&name=${name}&phone=${phoneNumber}&email=${email}`
       )
         .then(() => {
-          fetch(`https://sada.ziho.kr/coin/add/0/${name}/10000`);
+          fetch(`https://sada.ziho.kr/coin/add/${id}/${name}/${reward}`);
           notice({ type: "SUCCESS", message: "SADA코인 개설 완료!" });
+          setIsSent(true);
         })
         .catch(() => notice({ type: "ERROR", message: "SADA코인 개설 실패" }));
     } else {
-      handleUpdate(
-        studentNumber + " " + students[studentNumber],
-        parseInt(time!)
-      );
       fetch(
-        `https://sada.ziho.kr/coin/register?id=${studentNumber}&name=${students[studentNumber]}&phone=${phoneNumber}&email=${email}`
+        `https://sada.ziho.kr/coin/register?id=${id}&studentid=${studentNumber}&name=${name}&phone=${phoneNumber}&email=${email}`
       )
         .then(() => {
-          fetch(`https://sada.ziho.kr/coin/add/${studentNumber}/${name}/10000`);
+          fetch(`https://sada.ziho.kr/coin/add/${id}/${name}/${reward}`);
           notice({ type: "SUCCESS", message: "SADA코인 개설 완료!" });
+          setIsSent(true);
         })
         .catch(() => notice({ type: "ERROR", message: "SADA코인 개설 실패" }));
     }
@@ -114,22 +75,19 @@ const LastPage = () => {
 
   return (
     <main style={{ paddingTop: "7rem" }}>
-      <ul className={classes.list}>
-        {list.length === 0 ? (
-          <span style={{ textAlign: "center" }}>
-            첫번째 클리어! 기록을 추가해주세요
-          </span>
-        ) : (
-          list.map((item, i) => (
-            <li key={i}>
-              <span>{item["name"]}</span>
-              <span>{secondsToMMSS(item["score"] as number)}</span>
-            </li>
-          ))
-        )}
-      </ul>
-      <button className="btn-flat" onClick={submitHandler} disabled={disable}>
-        내 기록 추가 및 SADA코인 받기
+      <input
+        className={classes.id}
+        type="number"
+        placeholder="마지막은 정상적인 UI! 아이디를 입력해주세요"
+        value={id}
+        onChange={(e) => setId(e.target.value)}
+      />
+      <button
+        className="btn-flat"
+        onClick={submitHandler}
+        disabled={disable || id === "" || isSent}
+      >
+        SADA코인 받기
       </button>
     </main>
   );

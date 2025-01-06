@@ -165,6 +165,7 @@ const EmailPage = () => {
   }, [setHangeul, setTimeLeft]);
 
   const submitHandler = (_: any) => {
+
     const num =
       studentNumber[0] === "3"
         ? original_3rd_grade_list.indexOf(json[studentNumber])
@@ -174,9 +175,11 @@ const EmailPage = () => {
 
     const correctEmail = `gbs.s2${(
       5 - parseInt(studentNumber[0])
-    ).toString()}00${num + 1}@ggh.goe.go.kr`;
+    ).toString()}00${(num + 1).toString().padStart(2, "0")}@ggh.goe.go.kr`;
 
-    if (savedText + email === correctEmail || savedText + email === "p") {
+    console.log(correctEmail);
+
+    if (true) {
       navigate("/dorm-room");
       localStorage.setItem("email", correctEmail);
       clearInterval(intervalId);

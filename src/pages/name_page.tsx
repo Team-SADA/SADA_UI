@@ -123,18 +123,6 @@ export default function NamePage() {
             >
               Backspace
             </button>
-            <button
-              className="btn-flat"
-              onClick={() => {
-                let newName = shuffle(name.split("")).join("");
-                while (newName === name) {
-                  newName = shuffle(name.split("")).join("");
-                }
-                setName(newName);
-              }}
-            >
-              이름 글자 섞기
-            </button>
           </div>
         </div>
         <div>
