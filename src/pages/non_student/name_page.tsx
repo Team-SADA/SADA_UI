@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 
 import * as Hangul from "hangul-js";
 
-const nameChars = ["ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ", "ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ"]
+const nameChars = ["ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ", "ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅒㅖ"]
   .join("")
   .split(""); // 136 = 15 * 9 + 1
 
@@ -97,6 +97,10 @@ export default function NonStudentNamePage() {
             <button
               className="btn-flat"
               onClick={() => {
+                if (name.trim() === "") {
+                  notice({ message: "이름이 비었어요~", type: "ERROR" });
+                  return;
+                }
                 let newName = shuffle(
                   Hangul.assemble(name.split("")).split("")
                 ).join("");

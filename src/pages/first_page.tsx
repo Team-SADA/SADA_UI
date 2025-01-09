@@ -1,10 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./first_page.module.scss";
 import FirstPageModal from "../components/first_page_modal";
 
 const FirstPage = () => {
   const [agree, setAgree] = useState<boolean>(true);
   const [show, setShow] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Create a <style> tag
+    const style = document.createElement("style");
+    style.innerHTML = `
+      .time {
+        display: none;
+      }
+    `;
+
+    // Append the <style> tag to the <head>
+    document.head.appendChild(style);
+
+    // Cleanup: Remove the style tag when the component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   const checkboxClickHandler = (_: any) => {
     setAgree(false);

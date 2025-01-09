@@ -88,7 +88,6 @@ export default function App() {
           클리어 타임: {secondsToMMSS(time)}
         </div>
       )}
-      {/* <div className={`time center`}>클리어 타임: {secondsToMMSS(123)}</div> */}
       <MyGlobalContext.Provider
         value={{
           studentNumber,
