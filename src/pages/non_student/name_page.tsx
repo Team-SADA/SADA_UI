@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 
 import * as Hangul from "hangul-js";
 
-const nameChars = ["ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ", "ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅒㅖ"]
+const nameChars = ["ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ", "ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅔㅒㅖ"]
   .join("")
   .split(""); // 136 = 15 * 9 + 1
 
