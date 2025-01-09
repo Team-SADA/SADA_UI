@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../components/context/context";
 import { useNotification } from "../components/notification/NotificationProvider";
 import { v4 } from "uuid";
+import Hangul from "hangul-js";
 
 const json: any = require("../components/context/data.json");
 
@@ -118,32 +119,44 @@ export default function NamePage() {
           <input type="text" value={name} readOnly />
           <div>
             <button
-              className="btn-flat"
-              onClick={() => setName(name.slice(0, -1))}
+                className="btn-flat"
+                onClick={() => setName(name.slice(0, -1))}
             >
               Backspace
+            </button>
+            <button
+                className="btn-flat"
+                onClick={() => {
+                  let newName = shuffle(name.split("")).join("");
+                  while (newName === name) {
+                    newName = shuffle(name.split("")).join("");
+                  }
+                  setName(newName);
+                }}
+            >
+              이름 글자 섞기
             </button>
           </div>
         </div>
         <div>
           자신의 이름에 포함된 글자를 바구니에 순서 상관없이 담아보아요!
-          <br />
+          <br/>
           바구니에는 글자 하나만 넣을 수 있어요!
-          <br />
+          <br/>
           바구니의 입력 버튼을 눌러 바구니에 담은 글자를 이름에 추가하세요!
-          <br />
+          <br/>
           모든 글자를 추가하셨다면 '이름 글자 섞기' 버튼을 눌러 이름을 맞춰
           보세요!
         </div>
       </header>
       <div className={classes.nameTable}>
         {blockList.map((block) => (
-          <span
-            className={classes.line}
-            style={{ left: block.left }}
-            key={block.id}
-            onAnimationEnd={() => {
-              const relativeDistance =
+            <span
+                className={classes.line}
+                style={{left: block.left}}
+                key={block.id}
+                onAnimationEnd={() => {
+                  const relativeDistance =
                 block.left -
                 mouseX +
                 16 +

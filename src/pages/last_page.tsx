@@ -74,22 +74,18 @@ const LastPage = () => {
   };
 
   return (
-    <main style={{ paddingTop: "7rem" }}>
-      <input
-        className={classes.id}
-        type="number"
-        placeholder="마지막은 정상적인 UI! 아이디를 입력해주세요"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      />
-      <button
-        className="btn-flat"
-        onClick={submitHandler}
-        disabled={disable || id === "" || isSent}
-      >
-        SADA코인 받기
-      </button>
-    </main>
+      <main style={{paddingTop: "7rem"}}>
+          <input
+              className={classes.id}
+              type="number"
+              placeholder="마지막은 정상적인 UI! 아이디를 입력해주세요"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+          />
+          <div style={{justifyContent: "center", flexDirection: "column", alignItems: "center", display: "flex"}}>
+              <img src="logo.png" alt="" height={200} style={{marginTop: 100}}/>
+          </div>
+      </main>
   );
 };
 
